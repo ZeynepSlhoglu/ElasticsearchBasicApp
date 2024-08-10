@@ -1,0 +1,105 @@
+﻿@page "/"
+@using ElasticsearchBasicApp.Data
+@inject CrawlService CrawlService
+@inject ElasticsearchService ElasticsearchService
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Astroloji Haberleri</PageTitle>
+
+<div class="container">
+    <div class="row mb-3">
+        <div class="col">
+            <button class="btn btn-danger deleted" @onclick="ClearAndReCrawlArticles" disabled="@isLoading">
+                    @if (isLoading)
+                    {
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true">
+                       
+                    </span> 
+                    }
+                    else
+                    {
+                    <span class=" " role="status" aria-hidden="true">
+                        Verileri getir
+                    </span> 
+                     }
+            </button>
+        </div>
+        <div class="col">
+            <input class="form-control" @bind="searchTerm" placeholder="Arama..." @oninput="SearchArticles" disabled="@isLoading" />
+        </div>
+    </div>
+
+    <h3>Haberler</h3>
+
+    @if (articles != null && articles.Any())
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Görsel</th>
+                    <th>Başlık</th>
+                    <th>Açıklama</th>
+                    <th>Link</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var article in articles)
+                {
+                    <tr>
+                        <td>
+                            <img src="@article.ImageUrl" alt="@article.Title" width="100" />
+                        </td>
+                        <td>@article.Title</td>
+                        <td>@article.Description</td>
+                        <td><a href="@article.Url" target="_blank">Read more...</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>Veri bulunamadı. Lütfen veri çekin veya arama yapın.</p>
+    }
+</div>
+
+@code {
+    private List<Article> articles;
+    private string searchTerm;
+    private bool isLoading = false;
+
+    protected override async Task OnInitializedAsync()
+    { 
+        articles = await ElasticsearchService.GetAllArticlesAsync();
+    }
+
+    private async Task ClearAndReCrawlArticles()
+    {
+        isLoading = true;
+        StateHasChanged(); // değişiklikleri güncelle
+         
+        bool response = await ElasticsearchService.ClearAllArticlesAsync();
+
+        if (response)
+        { 
+            var newArticles = await CrawlService.CrawlWebsiteAsync("https://www.sozcu.com.tr/astroloji");
+            await ElasticsearchService.IndexArticlesAsync(newArticles);
+             
+            articles = newArticles;
+        }
+        else
+        { 
+            await JSRuntime.InvokeVoidAsync("alert", "Veriler silinemedi. Lütfen daha sonra tekrar deneyin.");
+        }
+
+        StateHasChanged();  
+        isLoading = false; 
+    }
+
+    private async Task SearchArticles(ChangeEventArgs e)
+    {
+        searchTerm = e.Value.ToString();
+        articles = await ElasticsearchService.SearchArticlesAsync(searchTerm);
+        StateHasChanged();
+    }
+}
