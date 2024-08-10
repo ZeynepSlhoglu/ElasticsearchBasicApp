@@ -45,3 +45,5 @@ Bu proje, Blazor Server-Side mimarisini kullanarak, kullanıcı arayüzünü sun
 - CrawlService: ** www.sozcu.com.tr/astroloji sayfasından haberleri çeker.
 - ElasticsearchService: Çekilen haberleri Elasticsearch'e kaydeder, temizler ve arama yapar.
 - Article Modeli: Haberlerin başlık, açıklama, görsel ve URL bilgilerini tutar.
+
+[![YouTube Video](https://img.youtube.com/vi/b7MckTp8umg/0.jpg)](https://youtu.be/b7MckTp8umg)
