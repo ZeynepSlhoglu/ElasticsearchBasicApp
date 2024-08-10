@@ -54,4 +54,3 @@ Bu proje, Blazor Server-Side mimarisini kullanarak, kullanıcı arayüzünü sun
   </a>
 </p>
 
-Bu videoyu izleyerek proje hakkında daha fazla bilgi edinebilirsiniz.
