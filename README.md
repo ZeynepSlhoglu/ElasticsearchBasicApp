@@ -50,7 +50,7 @@ Bu proje, Blazor Server-Side mimarisini kullanarak, kullanıcı arayüzünü sun
 
 <p align="center">
   <a href="https://youtu.be/b7MckTp8umg">
-    <img src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*BmvPfSSm2G8C-khX1rhCGg.png" alt="YouTube Video" width="600" />
+    <img src="https://datascientest.com/en/files/2023/04/Elasticsearch.jpg" alt="YouTube Video" width="400" />
   </a>
 </p>
 
